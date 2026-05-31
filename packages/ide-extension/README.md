@@ -1,6 +1,6 @@
 # ghostchar — invisible character guard 👻
 
-Detect and reveal **invisible / dangerous Unicode characters** right in
+Detect and decode **invisible / dangerous Unicode characters** right in
 your editor — the ones used for **ASCII smuggling** (hidden LLM instructions),
 **Trojan Source** attacks ([CVE-2021-42574](https://nvd.nist.gov/vuln/detail/CVE-2021-42574)),
 and **zero-width steganography**.
@@ -16,8 +16,8 @@ and **zero-width steganography**.
 - **Quick fix** — *decode the hidden payload* when a decodable character
   (tag / variation-selector / zero-width) is flagged.
 - **Paste guard** — warns when pasted/inserted text contains invisible
-  characters, with one-click *Reveal*.
-- **Reveal hidden payloads** — decode a hidden payload from the document or a
+  characters, with one-click *Decode*.
+- **Decode hidden payloads** — recover a hidden payload from the document or a
   selection; all schemes (tags / variation-selector / zero-width) are tried.
 - **Encode / decode** — round-trip text to and from invisible characters (for
   building detector tests and demos). Select text and right-click to *Encode
@@ -44,7 +44,7 @@ in the Problems panel — no severity tiers to configure.
 Open the Command Palette and search for **ghostchar**:
 
 - **Scan workspace for invisible characters**
-- **Reveal hidden payload (decode all schemes)**
+- **Decode hidden payload (all schemes)**
 - **Encode selection to invisible characters** (choose scheme)
 - **Decode selection**
 

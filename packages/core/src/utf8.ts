@@ -80,7 +80,7 @@ export function utf8Decode(bytes: readonly number[]): string {
     }
     // Reject malformed continuations, overlong encodings, UTF-16 surrogates
     // (U+D800–DFFF), and out-of-range code points so a lenient decoder can't be
-    // used to smuggle bytes past the reveal.
+    // used to smuggle bytes past the decode.
     if (
       !ok ||
       cp < min ||

@@ -1,7 +1,7 @@
 {
   "name": "ide-ghostchar",
   "displayName": "ghostchar — invisible character guard",
-  "description": "Detect and reveal invisible/dangerous Unicode characters (ASCII smuggling, Trojan Source, zero-width) right in the editor.",
+  "description": "Detect and decode invisible/dangerous Unicode characters (ASCII smuggling, Trojan Source, zero-width) right in the editor.",
   "version": "1.0.0",
   "publisher": "valmet083",
   "license": "MIT",
@@ -28,8 +28,8 @@
         "title": "ghostchar: Scan workspace for invisible characters"
       },
       {
-        "command": "ghostchar.revealDocument",
-        "title": "ghostchar: Reveal hidden payload (decode all schemes)"
+        "command": "ghostchar.decodeDocument",
+        "title": "ghostchar: Decode hidden payload (all schemes)"
       },
       {
         "command": "ghostchar.encodeSelection",

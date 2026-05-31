@@ -1,5 +1,5 @@
 /**
- * Reveal text hidden by the encode schemes and strip it from the source.
+ * Decode text hidden by the encode schemes and strip it from the source.
  * One decoder per scheme, plus a {@link decode} dispatcher.
  */
 

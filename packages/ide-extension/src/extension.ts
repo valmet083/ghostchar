@@ -27,7 +27,7 @@ const DECODABLE_CATEGORIES = new Set(
 );
 
 /** Decode `text` across all schemes and show results in the output channel. */
-function revealDecoded(scope: string, text: string): void {
+function decodeAndShow(scope: string, text: string): void {
   const found = decodeAll(text);
   if (found.length === 0) {
     void vscode.window.showInformationMessage(
@@ -65,7 +65,7 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.StatusBarAlignment.Right,
     100,
   );
-  statusBar.command = "ghostchar.revealDocument";
+  statusBar.command = "ghostchar.decodeDocument";
   output = vscode.window.createOutputChannel("ghostchar");
 
   context.subscriptions.push(
@@ -95,7 +95,7 @@ export function activate(context: vscode.ExtensionContext): void {
       { providedCodeActionKinds: GhostcharCodeActions.kinds },
     ),
     vscode.commands.registerCommand("ghostchar.scanWorkspace", scanWorkspace),
-    vscode.commands.registerCommand("ghostchar.revealDocument", revealDocument),
+    vscode.commands.registerCommand("ghostchar.decodeDocument", decodeDocument),
     vscode.commands.registerCommand(
       "ghostchar.encodeSelection",
       encodeSelection,
@@ -187,7 +187,7 @@ function refresh(document: vscode.TextDocument): void {
   const findings = filteredFindings(text, cfg);
   findingsByDoc.set(document.uri.toString(), findings);
 
-  // Decode each decodable scheme present once, so the hover can reveal the
+  // Decode each decodable scheme present once, so the hover can show the
   // hidden payload inline (the key differentiator) without re-decoding per char.
   const decodedByScheme = new Map<EncodeScheme, string>();
   for (const f of findings) {
@@ -249,7 +249,7 @@ class GhostcharCodeActions implements vscode.CodeActionProvider {
     context: vscode.CodeActionContext,
   ): vscode.CodeAction[] {
     // Offer to decode the hidden payload for tag / variation-selector /
-    // zero-width carriers. ghostchar reveals payloads; it does not strip them.
+    // zero-width carriers. ghostchar decodes payloads; it does not strip them.
     const decodableDiags = context.diagnostics.filter(
       (diag) =>
         diag.source === SOURCE &&
@@ -263,17 +263,17 @@ class GhostcharCodeActions implements vscode.CodeActionProvider {
     );
     decodeAction.diagnostics = decodableDiags;
     decodeAction.command = {
-      command: "ghostchar.revealDocument",
+      command: "ghostchar.decodeDocument",
       title: "Decode hidden payload",
     };
     return [decodeAction];
   }
 }
 
-function revealDocument(): void {
+function decodeDocument(): void {
   const editor = vscode.window.activeTextEditor;
   if (!editor) return;
-  revealDecoded("in document", editor.document.getText());
+  decodeAndShow("in document", editor.document.getText());
 }
 
 async function encodeSelection(): Promise<void> {
@@ -284,11 +284,11 @@ async function encodeSelection(): Promise<void> {
       { label: "tags", description: "Unicode Tag block — printable ASCII only" },
       {
         label: "variation-selector",
-        description: "variation selectors — any Unicode (e.g. 日本語, emoji)",
+        description: "variation selectors — any Unicode (e.g. Japanese, emoji)",
       },
       {
         label: "zero-width",
-        description: "zero-width bit stream — any Unicode (e.g. 日本語, emoji)",
+        description: "zero-width bit stream — any Unicode (e.g. Japanese, emoji)",
       },
     ],
     { placeHolder: "ghostchar: choose an encoding scheme" },
@@ -311,7 +311,7 @@ async function encodeSelection(): Promise<void> {
 function decodeSelection(): void {
   const editor = vscode.window.activeTextEditor;
   if (!editor || editor.selection.isEmpty) return;
-  revealDecoded("in selection", editor.document.getText(editor.selection));
+  decodeAndShow("in selection", editor.document.getText(editor.selection));
 }
 
 async function scanWorkspace(): Promise<void> {
@@ -361,9 +361,9 @@ function runPasteGuard(event: vscode.TextDocumentChangeEvent): void {
   void vscode.window
     .showWarningMessage(
       "ghostchar: inserted text contains invisible/dangerous characters.",
-      "Reveal",
+      "Decode",
     )
     .then((choice) => {
-      if (choice === "Reveal") revealDocument();
+      if (choice === "Decode") decodeDocument();
     });
 }
