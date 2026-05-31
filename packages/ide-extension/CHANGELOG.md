@@ -1,5 +1,15 @@
 # ide-ghostchar
 
+## 1.0.1
+
+- **Visible markers** — zero-width characters now get an inline marker so they
+  are actually visible in the editor and the hover (decoded payload) is
+  reachable. Previously a zero-width highlight rendered as nothing.
+- **Theme-aware colors** — highlight/marker colors follow the active theme
+  (light / dark / high-contrast) instead of a fixed red.
+- Unified terminology on **decode** (the "reveal" command is now
+  `ghostchar.decodeDocument`, "Decode hidden payload").
+
 ## 1.0.0
 
 First stable release.

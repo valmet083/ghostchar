@@ -54,11 +54,24 @@ let output: vscode.OutputChannel;
 
 export function activate(context: vscode.ExtensionContext): void {
   decorationType = vscode.window.createTextEditorDecorationType({
-    backgroundColor: "rgba(255, 80, 80, 0.30)",
-    border: "1px solid rgba(255, 80, 80, 0.8)",
+    // Theme-aware (adapts to light / dark / high-contrast) via built-in tokens.
+    backgroundColor: new vscode.ThemeColor("editorWarning.background"),
+    border: "1px solid",
+    borderColor: new vscode.ThemeColor("editorWarning.foreground"),
     borderRadius: "2px",
-    overviewRulerColor: "rgba(255, 80, 80, 0.8)",
+    overviewRulerColor: new vscode.ThemeColor(
+      "editorOverviewRuler.warningForeground",
+    ),
     overviewRulerLane: vscode.OverviewRulerLane.Right,
+    // Most flagged characters are zero-width, so a background alone is
+    // invisible (and impossible to hover). Render a themed marker before each
+    // so it is actually visible and the hover target is reachable.
+    before: {
+      contentText: "•",
+      color: new vscode.ThemeColor("editorWarning.foreground"),
+      margin: "0 1px 0 0",
+      fontWeight: "bold",
+    },
   });
   diagnostics = vscode.languages.createDiagnosticCollection(SOURCE);
   statusBar = vscode.window.createStatusBarItem(
