@@ -1,0 +1,129 @@
+{
+  "name": "ide-ghostchar",
+  "displayName": "ghostchar — invisible character guard",
+  "description": "Detect and reveal invisible/dangerous Unicode characters (ASCII smuggling, Trojan Source, zero-width) right in the editor.",
+  "version": "1.0.0",
+  "publisher": "valmet083",
+  "license": "MIT",
+  "icon": "images/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/valmet083/ghostchar.git",
+    "directory": "packages/ide-extension"
+  },
+  "homepage": "https://github.com/valmet083/ghostchar#readme",
+  "bugs": {
+    "url": "https://github.com/valmet083/ghostchar/issues"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Linters", "Other"],
+  "main": "./dist/extension.js",
+  "activationEvents": ["onStartupFinished"],
+  "contributes": {
+    "commands": [
+      {
+        "command": "ghostchar.scanWorkspace",
+        "title": "ghostchar: Scan workspace for invisible characters"
+      },
+      {
+        "command": "ghostchar.revealDocument",
+        "title": "ghostchar: Reveal hidden payload (decode all schemes)"
+      },
+      {
+        "command": "ghostchar.encodeSelection",
+        "title": "ghostchar: Encode selection to invisible characters"
+      },
+      {
+        "command": "ghostchar.decodeSelection",
+        "title": "ghostchar: Decode selection"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "ghostchar.encodeSelection",
+          "when": "editorHasSelection",
+          "group": "ghostchar@1"
+        },
+        {
+          "command": "ghostchar.decodeSelection",
+          "when": "editorHasSelection",
+          "group": "ghostchar@1"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "ghostchar",
+      "properties": {
+        "ghostchar.enabledCategories": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "unicode-tags",
+              "bidi-control",
+              "zero-width",
+              "variation-selector",
+              "invisible-operator",
+              "non-standard-space"
+            ]
+          },
+          "default": [
+            "unicode-tags",
+            "bidi-control",
+            "zero-width",
+            "variation-selector",
+            "invisible-operator",
+            "non-standard-space"
+          ],
+          "description": "Character categories to flag."
+        },
+        "ghostchar.pasteGuard": {
+          "type": "boolean",
+          "default": true,
+          "description": "Warn when pasted/inserted text contains invisible characters."
+        },
+        "ghostchar.scanOnSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "Scan a file for invisible/dangerous characters when it is saved."
+        },
+        "ghostchar.automaticWorkspaceScan.enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Periodically scan the whole workspace in the background."
+        },
+        "ghostchar.automaticWorkspaceScan.intervalMinutes": {
+          "type": "number",
+          "minimum": 1,
+          "default": 60,
+          "description": "Minutes between automatic workspace scans (when enabled)."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "node esbuild.js --production",
+    "watch": "node esbuild.js --watch",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "copy-license": "node -e \"require('fs').copyFileSync('../../LICENSE','LICENSE')\"",
+    "vscode:prepublish": "pnpm run copy-license && node esbuild.js --production",
+    "package": "vsce package --no-dependencies",
+    "publish:vsce": "vsce publish --no-dependencies",
+    "publish:ovsx": "ovsx publish --no-dependencies",
+    "publish:all": "pnpm run publish:vsce && pnpm run publish:ovsx"
+  },
+  "dependencies": {
+    "@ghostchar/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.2.1",
+    "esbuild": "^0.25.0",
+    "ovsx": "^0.10.1",
+    "tsup": "^8.3.5"
+  }
+}

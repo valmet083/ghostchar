@@ -1,0 +1,17 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run ghostchar Extension",
+      "type": "extensionHost",
+      "request": "launch",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}/packages/ide-extension"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/packages/ide-extension/dist/**/*.js"
+      ],
+      "preLaunchTask": "npm: watch - packages/ide-extension"
+    }
+  ]
+}

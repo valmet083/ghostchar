@@ -1,0 +1,11 @@
+node_modules/
+dist/
+out/
+*.vsix
+*.tsbuildinfo
+coverage/
+.DS_Store
+
+# Per-package LICENSE is generated from the root LICENSE at pack/publish time
+# (prepack for npm packages, vscode:prepublish for the extension).
+packages/*/LICENSE

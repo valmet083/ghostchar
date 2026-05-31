@@ -1,0 +1,46 @@
+{
+  "name": "@ghostchar/core",
+  "version": "1.0.0",
+  "description": "Pure, dependency-free engine to detect, encode, and decode invisible/dangerous Unicode characters.",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/valmet083/ghostchar.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/valmet083/ghostchar/tree/main/packages/core#readme",
+  "bugs": {
+    "url": "https://github.com/valmet083/ghostchar/issues"
+  },
+  "keywords": [
+    "unicode",
+    "security",
+    "invisible-characters",
+    "ascii-smuggling",
+    "trojan-source",
+    "zero-width",
+    "bidi",
+    "steganography"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepack": "node -e \"require('fs').copyFileSync('../../LICENSE','LICENSE')\""
+  },
+  "devDependencies": {
+    "vitest": "^3.2.4"
+  }
+}

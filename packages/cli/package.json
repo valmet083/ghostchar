@@ -1,0 +1,46 @@
+{
+  "name": "ghostchar",
+  "version": "1.0.0",
+  "description": "CLI to detect, encode, and decode invisible/dangerous Unicode characters (ASCII smuggling, Trojan Source, zero-width).",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/valmet083/ghostchar.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://github.com/valmet083/ghostchar/tree/main/packages/cli#readme",
+  "bugs": {
+    "url": "https://github.com/valmet083/ghostchar/issues"
+  },
+  "keywords": [
+    "unicode",
+    "security",
+    "invisible-characters",
+    "ascii-smuggling",
+    "trojan-source",
+    "zero-width",
+    "bidi",
+    "cli"
+  ],
+  "bin": {
+    "ghostchar": "./dist/index.js"
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "pretest": "tsup",
+    "test": "node --test",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepack": "node -e \"require('fs').copyFileSync('../../LICENSE','LICENSE')\""
+  },
+  "dependencies": {
+    "@ghostchar/core": "workspace:*",
+    "commander": "^12.1.0",
+    "fast-glob": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsup": "^8.3.5"
+  }
+}
