@@ -21,11 +21,6 @@ const CATEGORY_BY_ID = new Map<string, CharCategory>(
   CATEGORIES.map((c) => [c.id, c]),
 );
 
-/** Categories whose payload a quick-fix can decode (derived from the registry). */
-const DECODABLE_CATEGORIES = new Set(
-  CATEGORIES.filter((c) => c.scheme !== undefined).map((c) => c.id),
-);
-
 /** Decode `text` across all schemes and show results in the output channel. */
 function decodeAndShow(scope: string, text: string): void {
   const found = decodeAll(text);
@@ -257,24 +252,34 @@ class GhostcharCodeActions implements vscode.CodeActionProvider {
   static readonly kinds = [vscode.CodeActionKind.QuickFix];
 
   provideCodeActions(
-    _document: vscode.TextDocument,
+    document: vscode.TextDocument,
     _range: vscode.Range | vscode.Selection,
     context: vscode.CodeActionContext,
   ): vscode.CodeAction[] {
-    // Offer to decode the hidden payload for tag / variation-selector /
-    // zero-width carriers. ghostchar decodes payloads; it does not strip them.
-    const decodableDiags = context.diagnostics.filter(
-      (diag) =>
-        diag.source === SOURCE &&
-        typeof diag.code === "string" &&
-        DECODABLE_CATEGORIES.has(diag.code),
-    );
-    if (decodableDiags.length === 0) return [];
+    // Only offer "Decode hidden payload" when the flagged character's scheme
+    // actually recovers something from this document. A stray zero-width space
+    // (or a ZWJ/BOM that isn't a scheme carrier) decodes to nothing, so the
+    // action would be misleading there.
+    const text = document.getText();
+    const hasPayload = new Map<EncodeScheme, boolean>();
+    const relevant: vscode.Diagnostic[] = [];
+    for (const diag of context.diagnostics) {
+      if (diag.source !== SOURCE || typeof diag.code !== "string") continue;
+      const scheme = CATEGORY_BY_ID.get(diag.code)?.scheme;
+      if (!scheme) continue;
+      let payload = hasPayload.get(scheme);
+      if (payload === undefined) {
+        payload = decode(text, scheme).hidden.length > 0;
+        hasPayload.set(scheme, payload);
+      }
+      if (payload) relevant.push(diag);
+    }
+    if (relevant.length === 0) return [];
     const decodeAction = new vscode.CodeAction(
       "Decode hidden payload",
       vscode.CodeActionKind.QuickFix,
     );
-    decodeAction.diagnostics = decodableDiags;
+    decodeAction.diagnostics = relevant;
     decodeAction.command = {
       command: "ghostchar.decodeDocument",
       title: "Decode hidden payload",

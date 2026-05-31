@@ -9,6 +9,9 @@
   (light / dark / high-contrast) instead of a fixed red.
 - Unified terminology on **decode** (the "reveal" command is now
   `ghostchar.decodeDocument`, "Decode hidden payload").
+- The **decode quick fix** now appears only when the flagged character's scheme
+  actually recovers a payload, so a stray zero-width space no longer offers a
+  misleading "Decode hidden payload".
 
 ## 1.0.0
 
